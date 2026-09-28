@@ -1,11 +1,29 @@
-﻿import request from './request';
+﻿import request from './request';
+
+// Xboard 在库存为 0 时 capacity_limit 返回 "Sold out"（已翻译）字符串，统一转换为 0
+const normalizePlan = (plan) => {
+  if (plan && typeof plan.capacity_limit === 'string') {
+    const limit = Number(plan.capacity_limit);
+    plan.capacity_limit = Number.isNaN(limit) ? 0 : limit;
+  }
+  return plan;
+};
+
+const normalizePlanResponse = (response) => {
+  if (response && Array.isArray(response.data)) {
+    response.data.forEach(normalizePlan);
+  } else if (response && response.data) {
+    normalizePlan(response.data);
+  }
+  return response;
+};
 
 
 export function fetchPlans() {
   return request({
     url: '/user/plan/fetch',
     method: 'get'
-  });
+  }).then(normalizePlanResponse);
 }
 
 
@@ -21,7 +39,7 @@ export function fetchPlanById(id) {
   return request({
     url: `/user/plan/fetch?id=${id}`,
     method: 'get'
-  });
+  }).then(normalizePlanResponse);
 }
 
 
@@ -50,6 +68,11 @@ export function getOrderDetail(tradeNo) {
   return request({
     url: `/user/order/detail?trade_no=${tradeNo}`,
     method: 'get'
+  }).then(response => {
+    if (response && response.data && response.data.plan) {
+      normalizePlan(response.data.plan);
+    }
+    return response;
   });
 }
 

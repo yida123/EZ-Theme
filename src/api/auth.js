@@ -1,7 +1,8 @@
 ﻿
 import request from './request';
 import store from '@/store';
-import { SITE_CONFIG } from '@/utils/baseConfig';
+import { SITE_CONFIG, isXboard } from '@/utils/baseConfig';
+import { normalizeXboardGuestConfig } from './utils/xboardCaptcha';
 
 
 const setCookie = (name, value, days) => {
@@ -308,6 +309,11 @@ export function getWebsiteConfig() {
   return request({
     url: '/guest/comm/config',
     method: 'get'
+  }).then(response => {
+    if (isXboard() && response && response.data) {
+      response.data = normalizeXboardGuestConfig(response.data);
+    }
+    return response;
   });
 }
 

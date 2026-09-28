@@ -72,6 +72,24 @@ API_CONFIG: {
 新版 Xboard 支持礼品卡兑换。如需显示入口，可同时设置
 `PROFILE_CONFIG.showGiftCardRedeem` 为 `true`。
 
+Xboard 模式下，人机验证方式会自动跟随后端设置（reCAPTCHA v2 / Cloudflare Turnstile / reCAPTCHA v3），
+无需再手动修改 `CAPTCHA_CONFIG.captchaType`。
+
+### 作为 Xboard 主题部署（推荐）
+
+```bash
+npm run build:xboard
+```
+
+生成 `dist-xboard/EZTheme.zip`，在 Xboard 后台「主题配置」上传并启用即可。主题模式下：
+
+- 自动使用同域名的 `/api/v1`，站点名称、描述、Logo 沿用后台「站点设置」
+- 在后台「主题配置 → EZTheme」中可随时修改，无需重新打包：
+  - **各平台客户端**：每行一个 `名称|说明|下载链接`，第一行为推荐客户端（仪表盘下载按钮也使用它），留空则引导页不显示该平台
+  - **客服系统代码**：粘贴 Crisp 等嵌入代码，留空则关闭客服
+  - **自定义 HTML**：统计代码、第三方脚本等，原样插入页面底部
+- 每次打包的版本号会自动附加构建时间，可直接覆盖上传，已保存的主题配置会保留
+
 ---
 ## 🛠️ 开始使用
 

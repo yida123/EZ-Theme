@@ -599,6 +599,7 @@ import { register, checkLoginStatus, getWebsiteConfig, sendEmailVerify } from '@
 import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 import { CAPTCHA_CONFIG, AUTH_CONFIG } from '@/utils/baseConfig';
+import { getLogoUrl, getAssetUrl } from '@/utils/themeSettings';
 
 import AuthPopup from '@/components/auth/AuthPopup.vue';
 
@@ -722,11 +723,11 @@ export default {
 
 
 
-    const logoPath = ref('./images/logo.png');
+    const logoPath = ref(getLogoUrl());
 
     const handleLogoError = () => {
 
-      logoPath.value = '/images/logo.png';
+      logoPath.value = getAssetUrl('images/logo.png');
 
     };
 
@@ -896,6 +897,10 @@ export default {
           if (config.is_recaptcha === 1) {
 
             captchaConfig.siteKey = config.recaptcha_site_key;
+
+            if (config.captcha_provider) {
+              captchaConfig.type = config.captcha_provider;
+            }
 
           }
 
@@ -1499,6 +1504,12 @@ export default {
 
           window.grecaptcha.reset();
 
+        }
+
+        // Turnstile token 只能使用一次，失败后需重新获取
+        if (captchaConfig.type === 'cloudflare' && window.turnstile && document.getElementById('form-turnstile')) {
+          window.turnstile.reset('#form-turnstile');
+          captchaResponse.value = '';
         }
 
       } finally {

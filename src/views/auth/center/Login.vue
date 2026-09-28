@@ -273,6 +273,7 @@ import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 import { handleTokenLogin, hasVerifyToken } from '@/utils/tokenLogin';
 
 import { AUTH_CONFIG } from '@/utils/baseConfig';
+import { getLogoUrl, getAssetUrl } from '@/utils/themeSettings';
 
 import AuthPopup from '@/components/auth/AuthPopup.vue';
 
@@ -320,11 +321,11 @@ export default {
 
 
 
-    const logoPath = ref('./images/logo.png');
+    const logoPath = ref(getLogoUrl());
 
     const handleLogoError = () => {
 
-      logoPath.value = '/images/logo.png';
+      logoPath.value = getAssetUrl('images/logo.png');
 
     };
 

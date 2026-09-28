@@ -38,7 +38,7 @@
 
       <div class="site-title">
 
-        <img v-if="siteConfig.showLogo" src="/images/logo.png" alt="Logo" class="site-logo-img" />
+        <img v-if="siteConfig.showLogo" :src="logoUrl" alt="Logo" class="site-logo-img" />
 
         {{ siteConfig.siteName }}
 
@@ -87,6 +87,7 @@ import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 
 import { SITE_CONFIG, DEFAULT_CONFIG } from '@/utils/baseConfig';
+import { getLogoUrl } from '@/utils/themeSettings';
 
 
 import ThemeToggle from '@/components/common/ThemeToggle.vue';
@@ -132,6 +133,7 @@ export default {
     
 
     const siteConfig = ref(SITE_CONFIG);
+    const logoUrl = getLogoUrl();
 
     const defaultConfig = ref(DEFAULT_CONFIG);
 
@@ -267,6 +269,7 @@ export default {
     
 
     return {
+      logoUrl,
 
       landingPageRef,
 

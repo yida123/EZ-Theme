@@ -386,6 +386,7 @@ import { resetPassword, sendEmailVerify, checkLoginStatus, getWebsiteConfig } fr
 import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 import { CAPTCHA_CONFIG, AUTH_CONFIG } from '@/utils/baseConfig';
+import { getLogoUrl, getAssetUrl } from '@/utils/themeSettings';
 
 import AuthPopup from '@/components/auth/AuthPopup.vue';
 
@@ -503,11 +504,11 @@ export default {
 
 
 
-    const logoPath = ref('./images/logo.png');
+    const logoPath = ref(getLogoUrl());
 
     const handleLogoError = () => {
 
-      logoPath.value = '/images/logo.png';
+      logoPath.value = getAssetUrl('images/logo.png');
 
     };
 
@@ -636,6 +637,10 @@ export default {
           if (config.is_recaptcha === 1) {
 
             captchaConfig.siteKey = config.recaptcha_site_key;
+
+            if (config.captcha_provider) {
+              captchaConfig.type = config.captcha_provider;
+            }
 
 
 
