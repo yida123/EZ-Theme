@@ -156,6 +156,7 @@ import { validateEmail, validateRequired } from '@/utils/validators';
 import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 import { handleTokenLogin, hasVerifyToken } from '@/utils/tokenLogin';
 import { AUTH_LAYOUT_CONFIG, SITE_CONFIG, AUTH_CONFIG } from '@/utils/baseConfig';
+import { getLogoUrl, getAssetUrl } from '@/utils/themeSettings';
 import AuthPopup from '@/components/auth/AuthPopup.vue';
 import { shouldShowAuthPopup } from '@/utils/authPopupState';
 import { useNavigator } from "@/composables/useNavigator";
@@ -180,9 +181,9 @@ export default {
     const { showToast } = useToast();
     const { goTo } = useNavigator()
 
-    const logoPath = ref('./images/logo.png');
+    const logoPath = ref(getLogoUrl());
     const handleLogoError = () => {
-      logoPath.value = '/images/logo.png';
+      logoPath.value = getAssetUrl('images/logo.png');
     };
 
     const formData = reactive({

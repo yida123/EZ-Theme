@@ -1,0 +1,64 @@
+{
+  "name": "EZTheme",
+  "description": "EZ-Theme 用户前端（Xboard 主题版）",
+  "version": "1.0.0",
+  "images": "",
+  "configs": [
+    {
+      "label": "Windows 客户端",
+      "placeholder": "每行一个：名称|说明|下载链接，第一行为推荐客户端，留空则不显示该平台",
+      "field_name": "clients_windows",
+      "field_type": "textarea",
+      "default_value": "Clash Verge Rev|界面简洁，支持规则分流与 TUN 模式|https://github.com/clash-verge-rev/clash-verge-rev/releases\nv2rayN|老牌客户端，功能全面|https://github.com/2dust/v2rayN/releases"
+    },
+    {
+      "label": "macOS 客户端",
+      "placeholder": "每行一个：名称|说明|下载链接，第一行为推荐客户端，留空则不显示该平台",
+      "field_name": "clients_macos",
+      "field_type": "textarea",
+      "default_value": "Clash Verge Rev|支持 Apple Silicon 与 Intel 芯片|https://github.com/clash-verge-rev/clash-verge-rev/releases"
+    },
+    {
+      "label": "Android 客户端",
+      "placeholder": "每行一个：名称|说明|下载链接，第一行为推荐客户端，留空则不显示该平台",
+      "field_name": "clients_android",
+      "field_type": "textarea",
+      "default_value": "Clash Meta for Android|Mihomo 内核，规则分流稳定省电|https://github.com/MetaCubeX/ClashMetaForAndroid/releases\nv2rayNG|轻量易用|https://github.com/2dust/v2rayNG/releases"
+    },
+    {
+      "label": "iOS 客户端",
+      "placeholder": "每行一个：名称|说明|下载链接，第一行为推荐客户端，留空则不显示该平台",
+      "field_name": "clients_ios",
+      "field_type": "textarea",
+      "default_value": "Shadowrocket|需使用非中国大陆区 Apple ID 购买下载|https://apps.apple.com/app/shadowrocket/id932747118"
+    },
+    {
+      "label": "Linux 客户端",
+      "placeholder": "每行一个：名称|说明|下载链接，留空则仅在仪表盘使用默认链接",
+      "field_name": "clients_linux",
+      "field_type": "textarea",
+      "default_value": ""
+    },
+    {
+      "label": "OpenWrt 客户端",
+      "placeholder": "每行一个：名称|说明|下载链接，留空则仅在仪表盘使用默认链接",
+      "field_name": "clients_openwrt",
+      "field_type": "textarea",
+      "default_value": ""
+    },
+    {
+      "label": "客服系统代码",
+      "placeholder": "粘贴 Crisp 等客服系统提供的嵌入代码，使用 Crisp 时会自动同步用户邮箱、套餐等信息；留空则关闭客服",
+      "field_name": "customer_service_html",
+      "field_type": "textarea",
+      "default_value": ""
+    },
+    {
+      "label": "自定义 HTML（第三方脚本）",
+      "placeholder": "原样插入页面底部，可用于统计代码、第三方脚本等",
+      "field_name": "custom_html",
+      "field_type": "textarea",
+      "default_value": ""
+    }
+  ]
+}

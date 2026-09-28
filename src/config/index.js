@@ -278,13 +278,14 @@ export const config  = {
         showOpenWrt: true,
 
         // 客户端下载链接  //可以改成文档链接直接在新标签页打开
+        // 作为 Xboard 主题部署时，以后台「主题配置」中各平台的第一个客户端为准
         clientLinks: {
-            ios: 'https://apps.apple.com/app/xxx',
-            android: 'https://play.google.com/store/apps/xxx',
-            macos: 'https://github.com/xxx/releases/latest',
-            windows: 'https://github.com/xxx/releases/latest',
-            linux: 'https://github.com/xxx/releases/latest',
-            openwrt: 'https://github.com/xxx/releases/latest'
+            ios: 'https://apps.apple.com/app/shadowrocket/id932747118',
+            android: 'https://github.com/MetaCubeX/ClashMetaForAndroid/releases',
+            macos: 'https://github.com/clash-verge-rev/clash-verge-rev/releases',
+            windows: 'https://github.com/clash-verge-rev/clash-verge-rev/releases',
+            linux: 'https://github.com/clash-verge-rev/clash-verge-rev/releases',
+            openwrt: 'https://github.com/vernesong/OpenClash/releases'
         },
 
         // 订阅导入客户端显示控制 部分面板不支持SingBox导入请您注意检查

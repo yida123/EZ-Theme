@@ -22,6 +22,7 @@ import { onMounted, ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import preloadManager from '@/utils/preloadManager';
 import { CUSTOMER_SERVICE_CONFIG, AUTH_LAYOUT_CONFIG } from '@/utils/baseConfig';
+import { getLogoUrl } from '@/utils/themeSettings';
 
 export default {
   name: 'ResourcePreloader',
@@ -36,7 +37,7 @@ export default {
     const isCustomerServiceEnabled = CUSTOMER_SERVICE_CONFIG && CUSTOMER_SERVICE_CONFIG.enabled;
 
     const preloadImages = ref([
-      '/images/logo.png'
+      getLogoUrl()
     ]);
     
     const preloadQueue = ref([]);

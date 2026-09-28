@@ -1,4 +1,6 @@
-﻿import disableDevtool from "disable-devtool";
+﻿import './publicPath';
+import disableDevtool from "disable-devtool";
+import { applyThemeSettings } from './utils/themeSettings';
 
 const isProd = process.env.NODE_ENV === "production";
 const enableConfigJS = process.env.VUE_APP_CONFIGJS == "true";
@@ -12,6 +14,9 @@ const enableAntiDebugging = process.env.VUE_APP_DEBUGGING == "true";
         window.EZ_CONFIG = res.config || res.default || res;
       }
     }
+    
+    // Xboard 主题模式：合并后台「主题配置」
+    applyThemeSettings(window.EZ_CONFIG);
     
     // 反调试逻辑
     if (isProd && enableAntiDebugging) {

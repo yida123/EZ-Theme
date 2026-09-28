@@ -4,7 +4,7 @@
     <div class="static-layout" v-if="$route.meta.requiresAuth">
       <!-- 网站名称 -->
       <div class="site-logo">
-        <img v-if="siteConfig.showLogo" src="/images/logo.png" alt="Logo" class="site-logo-img" />
+        <img v-if="siteConfig.showLogo" :src="logoUrl" alt="Logo" class="site-logo-img" />
         {{ siteConfig.siteName }}
       </div>
       
@@ -80,6 +80,7 @@ import { useStore } from 'vuex';
 import { useTheme } from '@/composables/useTheme';
 import { useRouter, useRoute } from 'vue-router';
 import { SITE_CONFIG, PROFILE_CONFIG, CUSTOMER_SERVICE_CONFIG } from '@/utils/baseConfig';
+import { getLogoUrl } from '@/utils/themeSettings';
 import { checkAuthAndReloadMessages } from '@/utils/authUtils';
 import { checkUserLoginStatus } from '@/api/auth';
 import { handleRedirectPath } from '@/utils/redirectHandler';
@@ -128,6 +129,7 @@ export default {
     const store = useStore();
     const { applyTheme } = useTheme();
     const siteConfig = ref(SITE_CONFIG);
+    const logoUrl = getLogoUrl();
     const cachedRoutes = computed(() => pageCache.getCachedRoutes());
     
     const customerServiceConfig = computed(() => CUSTOMER_SERVICE_CONFIG);
@@ -250,6 +252,7 @@ export default {
     });
     
     return {
+      logoUrl,
       username,
       avatarUrl,
       siteConfig,

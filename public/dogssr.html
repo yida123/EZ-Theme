@@ -201,48 +201,8 @@
       <div class="wrap">
         <h2 class="sec-title">选择你的设备</h2>
         <p class="sec-sub">下载客户端，登录后在仪表盘一键导入订阅</p>
-        <div class="tabs" role="tablist">
-          <button class="tab active" data-tab="win">Windows</button>
-          <button class="tab" data-tab="mac">macOS</button>
-          <button class="tab" data-tab="android">Android</button>
-          <button class="tab" data-tab="ios">iOS</button>
-        </div>
-
-        <div class="panel active" id="panel-win">
-          <div class="client">
-            <div><div class="name">Clash Verge Rev<span class="tag">推荐</span></div><div class="desc">界面简洁，支持规则分流与 TUN 模式</div></div>
-            <a class="btn btn-primary" href="https://github.com/clash-verge-rev/clash-verge-rev/releases" target="_blank" rel="noopener">下载</a>
-          </div>
-          <div class="client">
-            <div><div class="name">v2rayN</div><div class="desc">老牌客户端，功能全面</div></div>
-            <a class="btn btn-ghost" href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener">下载</a>
-          </div>
-        </div>
-
-        <div class="panel" id="panel-mac">
-          <div class="client">
-            <div><div class="name">Clash Verge Rev<span class="tag">推荐</span></div><div class="desc">支持 Apple Silicon 与 Intel 芯片</div></div>
-            <a class="btn btn-primary" href="https://github.com/clash-verge-rev/clash-verge-rev/releases" target="_blank" rel="noopener">下载</a>
-          </div>
-        </div>
-
-        <div class="panel" id="panel-android">
-          <div class="client">
-            <div><div class="name">Clash Meta for Android<span class="tag">推荐</span></div><div class="desc">Mihomo 内核，规则分流稳定省电</div></div>
-            <a class="btn btn-primary" href="https://github.com/MetaCubeX/ClashMetaForAndroid/releases" target="_blank" rel="noopener">下载</a>
-          </div>
-          <div class="client">
-            <div><div class="name">v2rayNG</div><div class="desc">轻量易用</div></div>
-            <a class="btn btn-ghost" href="https://github.com/2dust/v2rayNG/releases" target="_blank" rel="noopener">下载</a>
-          </div>
-        </div>
-
-        <div class="panel" id="panel-ios">
-          <div class="client">
-            <div><div class="name">Shadowrocket<span class="tag">推荐</span></div><div class="desc">需使用非中国大陆区 Apple ID 购买下载</div></div>
-            <a class="btn btn-primary" href="https://apps.apple.com/app/shadowrocket/id932747118" target="_blank" rel="noopener">App Store</a>
-          </div>
-        </div>
+        <div class="tabs" role="tablist" id="clientTabs"></div>
+        <div id="clientPanels"></div>
       </div>
     </section>
 
@@ -333,24 +293,102 @@
         });
       });
 
-      // 平台切换
-      var tabs = document.querySelectorAll('.tab');
-      tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          tabs.forEach(function (t) { t.classList.remove('active'); });
-          document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
-          tab.classList.add('active');
-          document.getElementById('panel-' + tab.getAttribute('data-tab')).classList.add('active');
-        });
-      });
+      // 客户端列表：Xboard 主题模式下读取后台「主题配置」，否则使用下方默认值
+      var DEFAULT_CLIENTS = {
+        windows: [
+          { name: 'Clash Verge Rev', desc: '界面简洁，支持规则分流与 TUN 模式', url: 'https://github.com/clash-verge-rev/clash-verge-rev/releases' },
+          { name: 'v2rayN', desc: '老牌客户端，功能全面', url: 'https://github.com/2dust/v2rayN/releases' }
+        ],
+        macos: [
+          { name: 'Clash Verge Rev', desc: '支持 Apple Silicon 与 Intel 芯片', url: 'https://github.com/clash-verge-rev/clash-verge-rev/releases' }
+        ],
+        android: [
+          { name: 'Clash Meta for Android', desc: 'Mihomo 内核，规则分流稳定省电', url: 'https://github.com/MetaCubeX/ClashMetaForAndroid/releases' },
+          { name: 'v2rayNG', desc: '轻量易用', url: 'https://github.com/2dust/v2rayNG/releases' }
+        ],
+        ios: [
+          { name: 'Shadowrocket', desc: '需使用非中国大陆区 Apple ID 购买下载', url: 'https://apps.apple.com/app/shadowrocket/id932747118' }
+        ]
+      };
+      var PLATFORMS = [
+        ['windows', 'Windows'], ['macos', 'macOS'], ['android', 'Android'],
+        ['ios', 'iOS'], ['linux', 'Linux'], ['openwrt', 'OpenWrt']
+      ];
 
-      // 默认选中访客当前的平台
-      var ua = navigator.userAgent;
-      var guess = /iPhone|iPad|iPod/i.test(ua) ? 'ios'
-        : /Android/i.test(ua) ? 'android'
-        : /Mac OS X/i.test(ua) ? 'mac' : 'win';
-      var guessTab = document.querySelector('.tab[data-tab="' + guess + '"]');
-      if (guessTab) guessTab.click();
+      function getClients() {
+        try {
+          var cfg = inFrame && window.parent.EZ_CONFIG;
+          if (cfg && cfg.LANDING_CLIENTS) {
+            var hasAny = PLATFORMS.some(function (p) {
+              return (cfg.LANDING_CLIENTS[p[0]] || []).length > 0;
+            });
+            if (hasAny) return cfg.LANDING_CLIENTS;
+          }
+        } catch (e) { /* 跨域时无法读取父页面配置 */ }
+        return DEFAULT_CLIENTS;
+      }
+
+      function el(tag, className, text) {
+        var node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text) node.textContent = text;
+        return node;
+      }
+
+      function renderClients() {
+        var clients = getClients();
+        var tabsBox = document.getElementById('clientTabs');
+        var panelsBox = document.getElementById('clientPanels');
+
+        PLATFORMS.forEach(function (p) {
+          var list = clients[p[0]] || [];
+          if (!list.length) return;
+
+          var tab = el('button', 'tab', p[1]);
+          tab.setAttribute('data-tab', p[0]);
+          tabsBox.appendChild(tab);
+
+          var panel = el('div', 'panel');
+          panel.id = 'panel-' + p[0];
+          list.forEach(function (c, i) {
+            var row = el('div', 'client');
+            var info = el('div');
+            var name = el('div', 'name', c.name);
+            if (i === 0) name.appendChild(el('span', 'tag', '推荐'));
+            info.appendChild(name);
+            if (c.desc) info.appendChild(el('div', 'desc', c.desc));
+            var link = el('a', 'btn ' + (i === 0 ? 'btn-primary' : 'btn-ghost'), '下载');
+            link.href = c.url;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            row.appendChild(info);
+            row.appendChild(link);
+            panel.appendChild(row);
+          });
+          panelsBox.appendChild(panel);
+        });
+
+        var tabs = tabsBox.querySelectorAll('.tab');
+        function select(tab) {
+          tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
+          panelsBox.querySelectorAll('.panel').forEach(function (panel) {
+            panel.classList.toggle('active', panel.id === 'panel-' + tab.getAttribute('data-tab'));
+          });
+        }
+        tabs.forEach(function (tab) {
+          tab.addEventListener('click', function () { select(tab); });
+        });
+
+        // 默认选中访客当前的平台
+        var ua = navigator.userAgent;
+        var guess = /iPhone|iPad|iPod/i.test(ua) ? 'ios'
+          : /Android/i.test(ua) ? 'android'
+          : /Mac OS X/i.test(ua) ? 'macos'
+          : /Linux/i.test(ua) ? 'linux' : 'windows';
+        var initial = tabsBox.querySelector('.tab[data-tab="' + guess + '"]') || tabs[0];
+        if (initial) select(initial);
+      }
+      renderClients();
 
       // 跟随主题的明暗模式
       function applyTheme(theme) {
