@@ -1604,6 +1604,12 @@ export default {
 
         }
 
+        // Turnstile token 只能使用一次，失败后需重新获取
+        if (captchaConfig.type === 'cloudflare' && window.turnstile && document.getElementById('form-turnstile')) {
+          window.turnstile.reset('#form-turnstile');
+          captchaResponse.value = '';
+        }
+
       } finally {
 
         loading.value = false;

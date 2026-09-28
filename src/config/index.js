@@ -359,7 +359,7 @@ export const config  = {
     // 验证码配置
     CAPTCHA_CONFIG: {
         // 验证方式: 'google' 或 'cloudflare'
-        captchaType: 'google',
+        captchaType: 'cloudflare',
 
         // Google reCAPTCHA 配置 默认v2版本
         google: {
