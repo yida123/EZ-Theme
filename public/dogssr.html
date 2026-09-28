@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./images/logo.png">
+  <title>狗云｜Dogssr.com</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #f4f6fa;
+      --text: #0f1729;
+      --text-2: #5b6474;
+      --line: #e6e9ef;
+      --blue: #2f6bff;
+      --green: #12c98a;
+      --card: #ffffff;
+      --shadow: 0 10px 30px rgba(15, 23, 41, .06);
+    }
+    :root.dark-theme {
+      --bg: #0b0f17;
+      --bg-soft: #121826;
+      --text: #eef2f8;
+      --text-2: #9aa4b5;
+      --line: #222b3b;
+      --blue: #5b8cff;
+      --green: #2fe0a3;
+      --card: #141b29;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background .3s, color .3s;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    b.blue { color: var(--blue); }
+    b.green { color: var(--green); }
+
+    /* 导航 */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; height: 64px; gap: 32px; }
+    .brand { font-size: 22px; font-weight: 800; letter-spacing: .5px; display: flex; align-items: center; gap: 8px; }
+    .brand i { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 25%, transparent); }
+    .nav-links { display: flex; gap: 28px; font-size: 15px; color: var(--text-2); }
+    .nav-links a:hover { color: var(--text); }
+    .nav-actions { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 40px; padding: 0 20px; border-radius: 999px; font-size: 15px; font-weight: 600;
+      cursor: pointer; border: 1px solid transparent; transition: transform .15s, background .2s, border-color .2s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-ghost { border-color: var(--line); color: var(--text); background: transparent; }
+    .btn-ghost:hover { border-color: var(--text-2); }
+    .btn-lg { height: 52px; padding: 0 32px; font-size: 17px; }
+
+    /* 首屏 */
+    .hero { padding: 96px 0 72px; text-align: center; position: relative; overflow: hidden; }
+    .hero h1 { font-size: clamp(40px, 7vw, 76px); font-weight: 900; letter-spacing: -1px; line-height: 1.15; }
+    .hero p.sub { margin: 20px auto 0; max-width: 700px; font-size: clamp(16px, 2vw, 19px); color: var(--text-2); }
+    .hero .cta { margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .route {
+      margin: 64px auto 0; max-width: 820px; background: var(--card); border: 1px solid var(--line);
+      border-radius: 20px; padding: 24px 28px 18px; box-shadow: var(--shadow); text-align: left;
+    }
+    .route-head { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
+    .legend { display: flex; gap: 18px; }
+    .legend span::before { content: ""; display: inline-block; width: 18px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; background: var(--c); }
+    .route svg { width: 100%; height: 140px; display: block; }
+    .route .jitter { stroke: #b8c0cc; stroke-width: 2; fill: none; stroke-dasharray: 3000; stroke-dashoffset: 3000; animation: draw 2.4s ease forwards; }
+    .route .steady { stroke: var(--blue); stroke-width: 3; fill: none; stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: draw 2.4s .3s ease forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    /* 通用区块 */
+    section { padding: 88px 0; }
+    .soft { background: var(--bg-soft); }
+    h1, h2 { text-wrap: balance; }
+    .sec-title { text-align: center; font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+    .sec-sub { text-align: center; color: var(--text-2); margin-top: 10px; }
+
+    /* 平台 */
+    .tabs { margin: 40px auto 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .tab {
+      padding: 10px 24px; border-radius: 999px; border: 1px solid var(--line); background: var(--card);
+      color: var(--text-2); font-size: 15px; font-weight: 600; cursor: pointer; transition: all .2s;
+    }
+    .tab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .panel {
+      margin: 32px auto 0; max-width: 820px; background: var(--card); border: 1px solid var(--line);
+      border-radius: 20px; padding: 32px; box-shadow: var(--shadow); display: none;
+    }
+    .panel.active { display: block; animation: fade .35s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .client { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px dashed var(--line); }
+    .client:last-child { border-bottom: none; }
+    .client .name { font-weight: 700; font-size: 17px; }
+    .client .desc { color: var(--text-2); font-size: 14px; }
+    .client .btn { margin-left: auto; flex-shrink: 0; }
+    .tag { font-size: 12px; padding: 2px 8px; border-radius: 6px; background: color-mix(in srgb, var(--green) 16%, transparent); color: var(--green); margin-left: 8px; font-weight: 600; }
+
+    /* 特性 */
+    .features { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .feature { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 32px 26px; transition: transform .2s, box-shadow .2s; }
+    .feature:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .feature .no { font-size: 44px; font-weight: 900; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--blue); }
+    .feature h3 { margin-top: 20px; font-size: 22px; font-weight: 800; }
+    .feature p { margin-top: 10px; color: var(--text-2); font-size: 15px; }
+
+    /* 场景 */
+    .scenes { margin-top: 44px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+    .scene { padding: 14px 26px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); font-weight: 700; font-size: 16px; }
+    .scene small { display: block; font-weight: 400; color: var(--text-2); font-size: 13px; }
+
+    /* 底部行动 */
+    .final { text-align: center; }
+    .final h2 { font-size: clamp(30px, 5vw, 48px); font-weight: 900; }
+    .final .cta { margin-top: 28px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    footer { border-top: 1px solid var(--line); padding: 40px 0; color: var(--text-2); font-size: 14px; }
+    .foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .foot-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .foot-links a:hover { color: var(--text); }
+
+    @media (max-width: 900px) {
+      .features { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: 0 16px; }
+      .nav-links { display: none; }
+      .nav-actions .btn { height: 36px; padding: 0 16px; font-size: 14px; }
+      .hero { padding: 64px 0 48px; }
+      section { padding: 64px 0; }
+      .features { grid-template-columns: 1fr; }
+      .panel { padding: 20px; }
+      .tabs { gap: 6px; flex-wrap: nowrap; }
+      .tab { padding: 8px 14px; font-size: 14px; }
+      .client { flex-wrap: wrap; }
+      .client .btn { margin-left: 0; width: 100%; }
+      .route { padding: 18px 16px 12px; }
+      .route-head { flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top"><i></i><span id="siteName">狗云</span></a>
+      <nav class="nav-links">
+        <a href="#download">客户端下载</a>
+        <a href="#features">为什么选择</a>
+        <a href="javascript:void(0)" data-route="shop">套餐</a>
+        <a href="javascript:void(0)" data-route="docs">使用帮助</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-ghost" href="javascript:void(0)" data-route="login">登录</a>
+        <a class="btn btn-primary" href="javascript:void(0)" data-route="register">注册</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <h1>不绕路，<b class="blue">专线</b>直达<br>高峰期也<b class="green">稳</b></h1>
+        <p class="sub">IEPL 国际专线跨境，不经公网出口。游戏、视频、AI 工具，一个订阅全平台通用。</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href="javascript:void(0)" data-route="register">立即开始</a>
+          <a class="btn btn-ghost btn-lg" href="#download">下载客户端</a>
+        </div>
+
+        <div class="route" aria-hidden="true">
+          <div class="route-head">
+            <span>晚高峰延迟波动示意</span>
+            <div class="legend">
+              <span style="--c:#b8c0cc">普通公网线路</span>
+              <span style="--c:var(--blue)">IEPL 专线</span>
+            </div>
+          </div>
+          <svg viewBox="0 0 800 140" preserveAspectRatio="none">
+            <path class="jitter" d="M0 70 L40 52 L70 96 L100 40 L130 88 L160 30 L190 104 L220 58 L250 92 L280 24 L310 80 L340 48 L370 110 L400 36 L430 76 L460 20 L490 98 L520 54 L550 86 L580 28 L610 100 L640 46 L670 82 L700 34 L730 94 L760 50 L800 72"/>
+            <path class="steady" d="M0 104 C120 100 200 106 320 102 S560 98 680 103 S760 101 800 102"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="soft" id="download">
+      <div class="wrap">
+        <h2 class="sec-title">选择你的设备</h2>
+        <p class="sec-sub">下载客户端，登录后在仪表盘一键导入订阅</p>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="win">Windows</button>
+          <button class="tab" data-tab="mac">macOS</button>
+          <button class="tab" data-tab="android">Android</button>
+          <button class="tab" data-tab="ios">iOS</button>
+        </div>
+
+        <div class="panel active" id="panel-win">
+          <div class="client">
+            <div><div class="name">Clash Verge Rev<span class="tag">推荐</span></div><div class="desc">界面简洁，支持规则分流与 TUN 模式</div></div>
+            <a class="btn btn-primary" href="https://github.com/clash-verge-rev/clash-verge-rev/releases" target="_blank" rel="noopener">下载</a>
+          </div>
+          <div class="client">
+            <div><div class="name">v2rayN</div><div class="desc">老牌客户端，功能全面</div></div>
+            <a class="btn btn-ghost" href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener">下载</a>
+          </div>
+        </div>
+
+        <div class="panel" id="panel-mac">
+          <div class="client">
+            <div><div class="name">Clash Verge Rev<span class="tag">推荐</span></div><div class="desc">支持 Apple Silicon 与 Intel 芯片</div></div>
+            <a class="btn btn-primary" href="https://github.com/clash-verge-rev/clash-verge-rev/releases" target="_blank" rel="noopener">下载</a>
+          </div>
+        </div>
+
+        <div class="panel" id="panel-android">
+          <div class="client">
+            <div><div class="name">Clash Meta for Android<span class="tag">推荐</span></div><div class="desc">Mihomo 内核，规则分流稳定省电</div></div>
+            <a class="btn btn-primary" href="https://github.com/MetaCubeX/ClashMetaForAndroid/releases" target="_blank" rel="noopener">下载</a>
+          </div>
+          <div class="client">
+            <div><div class="name">v2rayNG</div><div class="desc">轻量易用</div></div>
+            <a class="btn btn-ghost" href="https://github.com/2dust/v2rayNG/releases" target="_blank" rel="noopener">下载</a>
+          </div>
+        </div>
+
+        <div class="panel" id="panel-ios">
+          <div class="client">
+            <div><div class="name">Shadowrocket<span class="tag">推荐</span></div><div class="desc">需使用非中国大陆区 Apple ID 购买下载</div></div>
+            <a class="btn btn-primary" href="https://apps.apple.com/app/shadowrocket/id932747118" target="_blank" rel="noopener">App Store</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <h2 class="sec-title">每一个细节，都<b class="blue">靠得住</b></h2>
+        <div class="features">
+          <div class="feature">
+            <div class="no">01</div>
+            <h3>专线<b class="blue">直连</b></h3>
+            <p>IEPL 私有专线跨境传输，不与公网抢出口，晚高峰也不拥堵。</p>
+          </div>
+          <div class="feature">
+            <div class="no">02</div>
+            <h3>全平台<b class="blue">通用</b></h3>
+            <p>Windows、macOS、Android、iOS 一个订阅全覆盖，多设备同时在线。</p>
+          </div>
+          <div class="feature">
+            <div class="no">03</div>
+            <h3>用量<b class="green">看得见</b></h3>
+            <p>剩余流量、到期时间、节点状态，在用户中心随时查看。</p>
+          </div>
+          <div class="feature">
+            <div class="no">04</div>
+            <h3>问题<b class="green">有人管</b></h3>
+            <p>在线客服与工单系统，使用中遇到问题及时响应。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="soft">
+      <div class="wrap">
+        <h2 class="sec-title">适用场景</h2>
+        <div class="scenes">
+          <div class="scene">🎮 游戏加速<small>降低跳 ping 与丢包</small></div>
+          <div class="scene">📺 流媒体<small>高清视频流畅播放</small></div>
+          <div class="scene">🤖 AI 工具<small>稳定访问常用 AI 服务</small></div>
+          <div class="scene">💼 远程办公<small>跨境协作不掉线</small></div>
+          <div class="scene">📚 学术资料<small>查阅文献更顺畅</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="wrap">
+        <h2>现在开始，体验<b class="blue">专线</b>的稳定</h2>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href="javascript:void(0)" data-route="register">免费注册</a>
+          <a class="btn btn-ghost btn-lg" href="javascript:void(0)" data-route="shop">查看套餐</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div id="copyrightText">© Dogssr.com. All Rights Reserved.</div>
+      <div class="foot-links">
+        <a href="javascript:void(0)" data-route="dashboard">用户中心</a>
+        <a href="javascript:void(0)" data-route="shop">套餐</a>
+        <a href="javascript:void(0)" data-route="docs">使用文档</a>
+        <a href="javascript:void(0)" data-route="tickets">工单支持</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var inFrame = window.parent !== window;
+
+      // 站点名与版权年份
+      document.getElementById('copyrightText').textContent =
+        '© ' + new Date().getFullYear() + ' Dogssr.com. All Rights Reserved.';
+
+      // 跳转到主题内页面：嵌入时交给父页面路由，独立打开时直接跳转
+      function navigateTo(route) {
+        if (inFrame) {
+          window.parent.postMessage({ type: 'navigation', route: route }, '*');
+        } else {
+          window.location.href = '/#/' + route;
+        }
+      }
+      document.querySelectorAll('[data-route]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          navigateTo(el.getAttribute('data-route'));
+        });
+      });
+
+      // 平台切换
+      var tabs = document.querySelectorAll('.tab');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) { t.classList.remove('active'); });
+          document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+          tab.classList.add('active');
+          document.getElementById('panel-' + tab.getAttribute('data-tab')).classList.add('active');
+        });
+      });
+
+      // 默认选中访客当前的平台
+      var ua = navigator.userAgent;
+      var guess = /iPhone|iPad|iPod/i.test(ua) ? 'ios'
+        : /Android/i.test(ua) ? 'android'
+        : /Mac OS X/i.test(ua) ? 'mac' : 'win';
+      var guessTab = document.querySelector('.tab[data-tab="' + guess + '"]');
+      if (guessTab) guessTab.click();
+
+      // 跟随主题的明暗模式
+      function applyTheme(theme) {
+        document.documentElement.classList.toggle('dark-theme', theme === 'dark');
+      }
+      window.addEventListener('message', function (event) {
+        if (event.data && event.data.type === 'setTheme') applyTheme(event.data.theme);
+      });
+      if (inFrame) {
+        window.parent.postMessage({ type: 'getTheme' }, '*');
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        applyTheme('dark');
+      }
+    })();
+  </script>
+</body>
+</html>
