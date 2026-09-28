@@ -72,6 +72,9 @@ API_CONFIG: {
 新版 Xboard 支持礼品卡兑换。如需显示入口，可同时设置
 `PROFILE_CONFIG.showGiftCardRedeem` 为 `true`。
 
+Xboard 模式下，人机验证方式会自动跟随后端设置（reCAPTCHA v2 / Cloudflare Turnstile / reCAPTCHA v3），
+无需再手动修改 `CAPTCHA_CONFIG.captchaType`。
+
 ---
 ## 🛠️ 开始使用
 

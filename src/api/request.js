@@ -4,6 +4,7 @@ import { API_BASE_URL, getApiBaseUrl, isXiaoV2board, isXboard, CUSTOM_HEADERS_CO
 import { mapApiPath } from './utils/pathMapper';
 import { getAvailableApiUrl } from '@/utils/apiAvailabilityChecker';
 import { getEncrypUrl, randomIv } from "@/api/utils/encryption";
+import { applyXboardCaptcha } from './utils/xboardCaptcha';
 
 const isEncrypted = window.EZ_CONFIG &&
   window.EZ_CONFIG.API_MIDDLEWARE_ENABLED &&
@@ -20,9 +21,21 @@ const request = axios.create({
   }
 });
 
+const SESSION_EXPIRED_MESSAGE = '未登录或登陆已过期';
+
+const handleSessionExpired = () => {
+  const { forceLogout } = require('./auth');
+  forceLogout();
+  window.location.href = '/#/login';
+};
+
 request.interceptors.request.use(
-  config => {
+  async config => {
       config.baseURL = getApiBaseUrl();
+
+    if (isXboard() && config.method === 'post') {
+      config = await applyXboardCaptcha(config);
+    }
     
     if (window.EZ_CONFIG && window.EZ_CONFIG.API_MIDDLEWARE_ENABLED) {
       const originalUrl = config.url;
@@ -137,11 +150,9 @@ request.interceptors.response.use(
     try {
       const res = response.data;
       
-      if (res && res.message === '未登录或登陆已过期') {
+      if (res && res.message === SESSION_EXPIRED_MESSAGE) {
         console.log('检测到登录已过期，执行登出操作');
-        const { forceLogout } = require('./auth');
-        forceLogout();
-        window.location.href = '/#/login';
+        handleSessionExpired();
         return Promise.reject(new Error(res.message));
       }
       
@@ -153,6 +164,11 @@ request.interceptors.response.use(
   },
   error => {
     console.error('请求错误:', error);
+
+    // Xboard / V2board 登录失效时返回 HTTP 403
+    if (error.response && error.response.data && error.response.data.message === SESSION_EXPIRED_MESSAGE) {
+      handleSessionExpired();
+    }
     
     if (error.response && error.response.data && error.response.data.message) {
       error.response.message = error.response.data.message;

@@ -778,6 +778,10 @@ export default {
 
             captchaConfig.siteKey = config.recaptcha_site_key;
 
+            if (config.captcha_provider) {
+              captchaConfig.type = config.captcha_provider;
+            }
+
 
 
             await loadCaptchaScript();
